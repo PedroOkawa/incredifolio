@@ -1,14 +1,34 @@
 var express = require('express');
 var router = express.Router();
+var Portfolio = require('../models/portfolio');
+
+/* POST a portfolio. */
+router.post('/', function(req, res, next) {
+	var portfolio = new Portfolio();
+	portfolio.name = req.body.name;
+
+	portfolio.save(function(err) {
+		if(err) {
+			res.send(err);
+		}
+
+		res.json({ message: 'Portfolio ' + 0 + ' created!' });
+	});
+});
 
 /* GET all portfolios (minify) paginated. */
 router.get('/all', function(req, res, next) {
-	//Reequest from database
-	res.json(null);
+	Portfolio.find(function(err, portfolios) {
+		if(err) {
+			res.send(err);
+		}
+
+		res.json(portfolios);
+	})
 });
 
 /* GET portfolio's details (Complete description). */
-router.get('/all', function(req, res, next) {
+router.get('/details', function(req, res, next) {
 	//Reequest from database
 	res.json(null);
 });
