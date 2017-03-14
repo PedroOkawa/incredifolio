@@ -2,7 +2,14 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var PortfolioSchema = new Schema({
-	name: String
+	id: Number,
+	name: String,
+	screenshots:[
+		{
+			type: Schema.ObjectId,
+			ref: 'Screenshot'
+		}
+	]
 });
 
 module.exports = mongoose.model('Portfolio', PortfolioSchema);
