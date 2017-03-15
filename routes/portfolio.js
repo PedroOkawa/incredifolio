@@ -1,7 +1,44 @@
+var credentials = require('../config/credentials');
 var express = require('express');
 var router = express.Router();
+var jwt = require('jsonwebtoken');
 var Portfolio = require('../models/portfolio');
 var Screenshot = require('../models/screenshot');
+
+/* ERRORS DEFINITION */
+function errorTokenNotProvided() {
+	return {
+		'code': '5004',
+		'error': 'You must provide a token to make this request!'
+	}
+}
+
+function errorInvalidToken() {
+	return {
+		'code': '5005',
+		'error': 'Your token is invalid!'
+	}
+}
+
+/* MIDDLEWARE used to valdiate token */
+router.use(function(req, res, next) {
+	var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+	if(!token) {
+		res.status(401);
+		return res.json(errorTokenNotProvided());
+	}
+
+	jwt.verify(token, credentials.jwtSecret, function(err, decoded) {
+		if(err) {
+			res.status(401);
+			return res.json(errorInvalidToken());
+		}
+
+		req.decoded = decoded;
+		return next();
+	})
+});
 
 /* POST a portfolio. */
 router.post('/', function(req, res, next) {
