@@ -10,4 +10,4 @@ This API allow users to:
 * Request your own portfolios
 * Add templates
 
-Fell free to contact me and help me if you want or see something that's terribly developed. :D
+Fell free to contact and/or help me if see something that's terribly developed. :D
