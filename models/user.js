@@ -22,16 +22,4 @@ User.method('replaceId', function() {
     return obj;
 });
 
-/*
-
-User.virtual('id').get(function() {
-    return this._id.toHexString();
-});
-
-User.set('toJSON', {
-    virtuals: true
-});
-
-*/
-
 module.exports = mongoose.model('User', User);
