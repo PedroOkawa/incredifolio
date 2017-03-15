@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var PortfolioSchema = new Schema({
+var Portfolio = new Schema({
 	id: Number,
 	name: String,
 	screenshots:[
@@ -12,4 +12,4 @@ var PortfolioSchema = new Schema({
 	]
 });
 
-module.exports = mongoose.model('Portfolio', PortfolioSchema);
+module.exports = mongoose.model('Portfolio', Portfolio);
