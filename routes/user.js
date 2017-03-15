@@ -3,6 +3,7 @@ var errorResponses = require('../response/error');
 var successResponses = require('../response/success');
 var express = require('express');
 var router = express.Router();
+var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
 var User = require('../models/user');
 
@@ -30,6 +31,7 @@ router.post('/register', function(req, res, next) {
 		}
 
 		user = new User();
+		user._id = mongoose.Types.ObjectId();
 		user.name = username;
 		user.password = password;
 
