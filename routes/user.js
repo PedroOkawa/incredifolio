@@ -1,58 +1,17 @@
 var credentials = require('../config/credentials');
+var errorResponses = require('../response/error');
+var successResponses = require('../response/success');
 var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 var User = require('../models/user');
 
-/* RESPONSE DEFINITION */
-function successRegister(user, token) {
-	return {
-		'message': 'User ' + user.name + ' created!',
-		'token': token
-	}
-}
-
-function successAuthentication(user, token) {
-	return {
-		'message': 'User ' + user.name + ' authenticated!',
-		'token': token
-	}
-}
-
-/* ERRORS DEFINITION */
-function errorEmptyFields() {
-	return {
-		'code': '5000',
-		'error': 'You must provide username and password!'
-	}
-}
-
-function errorAlreadyExist() {
-	return {
-		'code': '5001',
-		'error': 'User already exist!'
-	};
-}
-
-function errorDoesNotExist() {
-	return {
-		'code': '5002',
-		'error': 'User does not exist!'
-	};
-}
-
-function errorInvalidCredentials() {
-	return {
-		'code': '5003',
-		'error': 'Invalid username or password!'
-	};
-}
-
 /* POST user's register */
 router.post('/register', function(req, res, next) {
-	if(!req.body || !req.body.username || !req.body.password) {
+	if(!req.body.username || !req.body.password) {
+		var field = !req.body.username ? 'username' : 'password';
 		res.status(400);
-		return res.send(errorEmptyFields());
+		return res.send(errorResponses.errorEmptyField(field));
 	}
 	var username = req.body.username;
 	var password = req.body.password;
@@ -67,7 +26,7 @@ router.post('/register', function(req, res, next) {
 
 		if(user) {
 			res.status(409);
-			return res.json(errorAlreadyExist());
+			return res.json(errorResponses.errorUserAlreadyExist());
 		}
 
 		user = new User();
@@ -82,16 +41,17 @@ router.post('/register', function(req, res, next) {
 
 			var token = jwt.sign(user, credentials.jwtSecret);
 			res.status(200);
-			return res.json(successRegister(user, token));
+			return res.json(successResponses.successRegister(user, token));
 		});
 	});
 });
 
 /* POST user's authentication */
 router.post('/authenticate', function(req, res, next) {
-	if(!req.body || !req.body.username || !req.body.password) {
+	if(!req.body.username || !req.body.password) {
+		var field = !req.body.username ? 'username' : 'password';
 		res.status(400);
-		return res.send(errorEmptyFields());
+		return res.send(errorResponses.errorEmptyField(field));
 	}
 	var username = req.body.username;
 	var password = req.body.password;
@@ -106,17 +66,17 @@ router.post('/authenticate', function(req, res, next) {
 
 		if(!user) {
 			res.status(404);
-			return res.json(errorDoesNotExist());
+			return res.json(errorResponses.errorUserDoesNotExist());
 		}
 
 		if(user.password != password) {
 			res.status(401);
-			return res.json(errorInvalidCredentials());
+			return res.json(errorResponses.errorInvalidCredentials());
 		}
 
 		var token = jwt.sign(user, credentials.jwtSecret);
 		res.status(200);
-		return res.json(successAuthentication(user, token));
+		return res.json(successResponses.successAuthentication(user, token));
 	});
 });
 
