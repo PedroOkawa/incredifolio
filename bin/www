@@ -8,6 +8,7 @@ var app = require('../app');
 var credentials = require('../config/credentials');
 var debug = require('debug')('incredifolio:server');
 var http = require('http');
+var vhost = require('vhost');
 
 /**
  * Get port from environment and store in Express.
@@ -25,6 +26,8 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
+
+app.use(vhost(credentials.host, app));
 
 server.listen(port);
 server.on('error', onError);
