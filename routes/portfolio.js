@@ -1,4 +1,5 @@
 var async = require('async');
+var BSON = require('bson');
 var credentials = require('../config/credentials');
 var errorResponses = require('../response/error');
 var express = require('express');
@@ -33,6 +34,7 @@ router.post('/', function(req, res, next) {
 	var portfolio = new Portfolio();
 	portfolio.id = mongoose.Types.ObjectId();
 	portfolio.name = req.body.name;
+	portfolio.description = 'Description';
 
 	portfolio.save(function(err) {
 		if(err) {
@@ -41,6 +43,9 @@ router.post('/', function(req, res, next) {
 		}
 
 		portfolio = portfolio.replaceId();
+		
+		return res.json({ message: 'Portfolio ' + portfolio.name + ' created!' });
+		/*
 
 		var screenshots = [];
 
@@ -62,13 +67,44 @@ router.post('/', function(req, res, next) {
 
 			return res.json({ message: 'Portfolio ' + portfolio.name + ' created!' });
 		});
+
+		*/
 	});
 });
 
-/* GET all portfolios (minify) paginated. */
-router.get('/all', function(req, res, next) {
+/* POST a portfolio. */
+router.post('/:portfolioId', function(req, res, next) {
+	var portfolioId = BSON.ObjectID.createFromHexString(req.params.portfolioId);
+	console.log('portfolioId: ' + portfolioId);
 	Portfolio
-		.find({})
+		.findOne({_id:portfolioId})
+		.populate('screenshots')
+		.exec(function(err, portfolio) {
+			if(err) {
+				return res.send(err);
+			}
+
+			portfolio = portfolio.replaceId();
+
+			for(var i = 0; i < portfolio.screenshots.length; i++) {
+				delete portfolio.screenshots[i]._id;
+			}
+
+			res.json(portfolio);
+		});
+});
+
+/* GET all portfolios (minify) paginated by date (Created At). */
+router.get('/all', function(req, res, next) {
+	var perPage = !req.query.perPage ? 10 : Number(req.query.perPage);
+	var startDate = req.query.startDate;
+
+	var query = !startDate ? {} : { createdAt: { $lt: startDate } };
+
+	Portfolio
+		.find(query)
+		.limit(perPage)
+		.sort('-createdAt')
 		.populate('screenshots')
 		.exec(function(err, portfolios) {
 			if(err) {
@@ -77,9 +113,7 @@ router.get('/all', function(req, res, next) {
 
 			for(var i = 0; i < portfolios.length; i++) {
 				portfolios[i] = portfolios[i].replaceId();
-				for(var j = 0; j < portfolios[i].screenshots.length; j++) {
-					delete portfolios[i].screenshots[j]._id;
-				}
+				delete portfolios[i].screenshots;
 			}
 
 			res.json(portfolios);
@@ -88,8 +122,28 @@ router.get('/all', function(req, res, next) {
 
 /* GET portfolio's details (Complete description). */
 router.get('/:portfolioId', function(req, res, next) {
-	//Reequest from database
-	res.json(null);
+	var portfolioId = BSON.ObjectID.createFromHexString(req.params.portfolioId);
+	console.log('portfolioId: ' + portfolioId);
+	Portfolio
+		.findOne({_id:portfolioId})
+		.populate('screenshots')
+		.exec(function(err, portfolio) {
+			if(err) {
+				return res.send(err);
+			}
+
+			if(!portfolio) {
+				return res.send(null);
+			}
+
+			portfolio = portfolio.replaceId();
+
+			for(var i = 0; i < portfolio.screenshots.length; i++) {
+				delete portfolio.screenshots[i]._id;
+			}
+
+			res.json(portfolio);
+		});
 });
 
 module.exports = router;

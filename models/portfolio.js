@@ -7,6 +7,11 @@ var Portfolio = new Schema({
 	    ref: 'portfolio',
   	},
 	name: String,
+	description: String,
+	createdAt: {
+		type : Date,
+		default: Date.now
+	},
 	screenshots:[
 		{
 			type: Schema.Types.ObjectId,
