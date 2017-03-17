@@ -7,7 +7,8 @@
 var app = require('../app');
 var credentials = require('../config/credentials');
 var debug = require('debug')('incredifolio:server');
-var http = require('http');
+var fs = require('fs');
+var https = require('https');
 var vhost = require('vhost');
 
 /**
@@ -18,10 +19,13 @@ var port = normalizePort(process.env.PORT || credentials.port);
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * Create HTTPS server.
  */
-
-var server = http.createServer(app);
+const options = {
+  key: fs.readFileSync('./config/key.pem'),
+  cert: fs.readFileSync('./config/cert.pem')
+}
+var server = https.createServer(options, app);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -61,6 +65,8 @@ function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
   }
+
+  console.log('TEST');
 
   var bind = typeof port === 'string'
     ? 'Pipe ' + port
