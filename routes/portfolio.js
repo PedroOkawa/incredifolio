@@ -1,6 +1,7 @@
 var async = require('async');
 var BSON = require('bson');
 var credentials = require('../config/credentials');
+var dependencies = require('../controller/manager/dependencies')
 var errorResponses = require('../response/error');
 var express = require('express');
 var router = express.Router();
@@ -72,32 +73,20 @@ router.post('/', function(req, res, next) {
 	});
 });
 
-/* POST a portfolio. */
-router.post('/:portfolioId', function(req, res, next) {
+/* POST a screenshot into a specific portfolio. */
+router.post('/:portfolioId/screenshot', dependencies.upload.single('file'), function(req, res, next) {
 	var portfolioId = BSON.ObjectID.createFromHexString(req.params.portfolioId);
-	console.log('portfolioId: ' + portfolioId);
-	Portfolio
-		.findOne({_id:portfolioId})
-		.populate('screenshots')
-		.exec(function(err, portfolio) {
-			if(err) {
-				return res.send(err);
-			}
+	var description = req.body.description;
+	var file = req.file;
 
-			portfolio = portfolio.replaceId();
-
-			for(var i = 0; i < portfolio.screenshots.length; i++) {
-				delete portfolio.screenshots[i]._id;
-			}
-
-			res.json(portfolio);
-		});
+	return res.json(null);
 });
 
 /* GET all portfolios (minify) paginated by date (Created At). */
 router.get('/all', function(req, res, next) {
 	var perPage = !req.query.perPage ? 10 : Number(req.query.perPage);
-	var startDate = req.query.startDate;
+	var startDate = new Date(req.query.startDate * 1000);
+	console.log(startDate);
 
 	var query = !startDate ? {} : { createdAt: { $lt: startDate } };
 
