@@ -8,6 +8,5 @@ This API allow users to:
 * Login
 * Upload portfolios
 * Request your own portfolios
-* Add templates
 
 Fell free to contact and/or help me if see something that's terribly developed. :D
