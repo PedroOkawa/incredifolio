@@ -68,7 +68,7 @@ router.post('/authenticate', function(req, res, next) {
 
 		if(!user) {
 			res.status(404);
-			return res.json(errorResponses.errorUserDoesNotExist());
+			return res.json(errorResponses.errorDoesNotExist('User'));
 		}
 
 		if(user.password != password) {

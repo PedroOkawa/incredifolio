@@ -37,7 +37,6 @@ router.use(function(req, res, next) {
 /* POST a portfolio. */
 router.post('/', function(req, res, next) {
 	var portfolioObject = new Portfolio();
-	portfolioObject.id = mongoose.Types.ObjectId();
 	portfolioObject.name = req.body.name;
 	portfolioObject.description = 'Description';
 
@@ -49,7 +48,7 @@ router.post('/', function(req, res, next) {
 
 		portfolio = portfolio.replaceId();
 
-		res.status(200);
+		res.status(201);
 		return res.json(portfolio);
 	});
 });
@@ -83,7 +82,8 @@ router.post('/:portfolioId/screenshots', dependencies.upload.single('file'), fun
 					}
 				});
 
-				return res.json(null);
+				res.status(404);
+				return res.json(errorResponses.errorDoesNotExist('Portfolio'));
 			}
 
 			var fileFolderSource = path.resolve('./' + dependencies.output);
@@ -108,7 +108,6 @@ router.post('/:portfolioId/screenshots', dependencies.upload.single('file'), fun
 					}
 
 					var screenshotObject = new Screenshot({portfolio: portfolioId});
-					screenshotObject.id = mongoose.Types.ObjectId();
 					screenshotObject.description = description;
 					screenshotObject.image = path.resolve(fileFolderDest + '/' + file.filename);
 					screenshotObject.save(function(err, screenshot) {
@@ -118,7 +117,7 @@ router.post('/:portfolioId/screenshots', dependencies.upload.single('file'), fun
 						}
 
 						screenshot = screenshot.replaceId();
-						res.status(200);
+						res.status(201);
 						return res.json(screenshot);
 					});
 				});
@@ -164,7 +163,8 @@ router.get('/:portfolioId', function(req, res) {
 			}
 
 			if(!portfolio) {
-				return res.send(null);
+				res.status(404);
+				return res.json(errorResponses.errorDoesNotExist('Portfolio'));
 			}
 
 			portfolio = portfolio.replaceId();
@@ -181,41 +181,102 @@ router.get('/:portfolioId', function(req, res) {
 /* DELETE portfolio */
 router.delete('/:portfolioId', function(req, res) {
 	var portfolioId = BSON.ObjectID.createFromHexString(req.params.portfolioId);
+
 	Portfolio
-		.remove({_id:portfolioId})
-		.exec(function(err) {
+		.findOne({_id:portfolioId})
+		.exec(function(err, portfolio) {
 			if(err) {
 				res.status(500);
 				return res.json(err);
 			}
 
-			Screenshot
-				.remove({portfolio:portfolioId})
+			if(!portfolio) {
+				res.status(404);
+				return res.json(errorResponses.errorDoesNotExist('Portfolio'));
+			}
+
+			Portfolio
+				.remove({ _id:portfolioId })
 				.exec(function(err) {
 					if(err) {
 						res.status(500);
 						return res.json(err);
 					}
 
-					return res.json({ message: 'Deleted portfolio: ' + portfolioId });
+					Screenshot
+						.remove({ portfolio:portfolioId })
+						.exec(function(err) {
+							if(err) {
+								res.status(500);
+								return res.json(err);
+							}
+
+							res.status(200);
+							return res.json({ id:portfolioId });
+						});
 				});
 		});
 });
 
-/* DELETE portfolio */
+/* DELETE screenshot from a specific portfolio */
 router.delete('/:portfolioId/screenshots/:screenshotId', function(req, res) {
 	var portfolioId = BSON.ObjectID.createFromHexString(req.params.portfolioId);
 	var screenshotId = BSON.ObjectID.createFromHexString(req.params.screenshotId);
 
-	Screenshot
-		.remove({_id:screenshotId})
-		.exec(function(err) {
+	Portfolio
+		.findOne({ _id:portfolioId })
+		.exec(function(err, portfolio) {
 			if(err) {
 				res.status(500);
 				return res.json(err);
 			}
 
-			return res.json({ message: 'Deleted screenshot: ' + screenshotId });
+			if(!portfolio) {
+				res.status(404);
+				return res.json(errorResponses.errorDoesNotExist('Portfolio'));
+			}
+
+			Screenshot
+				.findOne({ _id:screenshotId})
+				.exec(function(err, screenshot) {
+					if(err) {
+						res.status(500);
+						return res.json(err);
+					}
+
+					if(!screenshot) {
+						res.status(404);
+						return res.json(errorResponses.errorDoesNotExist('Screenshot'));
+					}
+
+					Screenshot
+						.remove({ _id:screenshotId })
+						.exec(function(err) {
+							if(err) {
+								res.status(500);
+								return res.json(err);
+							}
+
+							fs.unlink(screenshot.image, function(err) {
+								if(err) {
+									res.status(500);
+									return res.json(err);
+								}
+							});
+
+							portfolio
+								.update({}, {'screenshot' : { _id:screenshotId }})
+								.exec(function(err, portfolio) {
+									if(err) {
+										res.status(500);
+										return res.json(err);
+									}
+
+									res.status(200);
+									return res.json({ _id:screenshotId });
+								});
+						});
+				})
 		});
 });
 

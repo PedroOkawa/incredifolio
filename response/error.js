@@ -17,10 +17,10 @@ module.exports = {
 		};
 	},
 	/* Warns thet the requested user does not exists */
-	errorUserDoesNotExist: function() {
+	errorDoesNotExist: function(object) {
 		return {
 			'code': '5002',
-			'error': 'User does not exist!'
+			'error': object + ' does not exist!'
 		};
 	},
 	/* Warns thet the user's credentials requested are invalid */
