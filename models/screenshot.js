@@ -22,5 +22,14 @@ Screenshot.plugin(relationship, {
 	relationshipPathName: 'portfolio'
 });
 
+Screenshot.method('replaceId', function() {
+    var obj = this.toObject();
+
+    obj.id = obj._id;
+    delete obj._id;
+
+    return obj;
+});
+
 
 module.exports = mongoose.model('Screenshot', Screenshot);
