@@ -3,9 +3,10 @@
 .project
 .config/
 
-components/
 bower_components/
-node_modules/
+components/
 dist/
+node_modules/
+public/images/
 
 .DS_Store
