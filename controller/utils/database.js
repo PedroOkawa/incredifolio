@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 
 var dependencies = require('../../controller/manager/dependencies');
@@ -110,7 +110,7 @@ module.exports = {
 		module.exports.findPortfolio(portfolioId,
 			function(status, response) {
 				if(status != 200) {
-					fs.unlinkSync(dependencies.output + file.filename, function(err) {
+					fs.removeSync(dependencies.output + file.filename, function(err) {
 						if(err) {
 							return callback(500, err);
 						}
@@ -125,11 +125,13 @@ module.exports = {
 				mkdirp(fileFolderDest,
 					function(err) {
 						if(err) {
-							fs.unlinkSync(dependencies.output + file.filename, function(err) {
-								if(err) {
-									return callback(500, err);
+							fs.removeSync(dependencies.output + file.filename,
+								function(err) {
+									if(err) {
+										return callback(500, err);
+									}
 								}
-							});
+							);
 
 							return res.json({ error: 'Error while trying to create folder: ' + fileFolderDest });
 						}
@@ -164,7 +166,7 @@ module.exports = {
 
 	/* REMOVE */
 	
-	deletePortfolio: function(portfolioId, callback) {
+	removePortfolio: function(portfolioId, callback) {
 		module.exports.findPortfolio(portfolioId,
 			function(status, response) {
 				if(status != 200) {
@@ -185,14 +187,26 @@ module.exports = {
 									return callback(500, err);
 								}
 
+								var fileFolderDest = path.resolve('./' + dependencies.output + '/' + portfolioId);
+
+								fs.removeSync(fileFolderDest,
+									function(err) {
+										if(err) {
+											return callback(500, err);
+										}
+									}
+								);
+
 								return callback(200, { id:portfolioId });
-							});
-					});
+							}
+						);
+					}
+				);
 			}
 		);
 	},
 
-	deleteScreenshot: function(portfolioId, screenshotId, callback) {
+	removeScreenshot: function(portfolioId, screenshotId, callback) {
 		module.exports.findPortfolio(portfolioId,
 			function(status, response) {
 				if(status != 200) {
@@ -217,7 +231,7 @@ module.exports = {
 										return callback(500, err);
 									}
 
-									fs.unlink(screenshot.image, function(err) {
+									fs.removeSync(screenshot.image, function(err) {
 										if(err) {
 											return callback(500, err);
 										}

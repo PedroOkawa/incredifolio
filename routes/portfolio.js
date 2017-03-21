@@ -66,7 +66,7 @@ router.get('/:portfolioId', function(req, res) {
 router.delete('/:portfolioId', function(req, res) {
 	var portfolioId = BSON.ObjectID.createFromHexString(req.params.portfolioId);
 
-	database.deletePortfolio(portfolioId,
+	database.removePortfolio(portfolioId,
 		function(status, response) {
 			res.status(status);
 			res.json(response);
@@ -79,7 +79,7 @@ router.delete('/:portfolioId/screenshots/:screenshotId', function(req, res) {
 	var portfolioId = BSON.ObjectID.createFromHexString(req.params.portfolioId);
 	var screenshotId = BSON.ObjectID.createFromHexString(req.params.screenshotId);
 
-	database.deleteScreenshot(portfolioId, screenshotId,
+	database.removeScreenshot(portfolioId, screenshotId,
 		function(status, response) {
 			res.status(status);
 			res.json(response);

@@ -12,6 +12,7 @@
     "bson": "^1.0.4",
     "debug": "~2.6.0",
     "express": "~4.14.1",
+    "fs-extra": "^2.1.2",
     "jsonwebtoken": "^7.3.0",
     "mkdirp": "^0.5.1",
     "mongoose": "^4.7.3",
