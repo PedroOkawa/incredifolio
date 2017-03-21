@@ -1,5 +1,5 @@
 /* SETUP (MODULES) */
-var credentials = require('./config/credentials');
+var credentials = require('./.config/credentials');
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');

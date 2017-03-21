@@ -1,4 +1,4 @@
-var credentials = require('../config/credentials');
+var credentials = require('../.config/credentials');
 var errorResponses = require('../response/error');
 var successResponses = require('../response/success');
 var express = require('express');

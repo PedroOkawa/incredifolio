@@ -3,7 +3,7 @@ const path = require('path');
 
 var async = require('async');
 var BSON = require('bson');
-var credentials = require('../config/credentials');
+var credentials = require('../.config/credentials');
 var dependencies = require('../controller/manager/dependencies')
 var errorResponses = require('../response/error');
 var express = require('express');
