@@ -4,7 +4,7 @@ module.exports = {
 	/* Warns the user about an empty field */
 	errorEmptyField: function(field) {
 		return {
-			'code': '5000',
+			'code': 5000,
 			'error': 'You must provide ' + field
 		}
 	},
@@ -12,21 +12,21 @@ module.exports = {
 	/* Warns thet the requested user to be creater already exists */
 	errorUserAlreadyExist: function() {
 		return {
-			'code': '5001',
+			'code': 5001,
 			'error': 'User already exist!'
 		};
 	},
 	/* Warns thet the requested user does not exists */
 	errorDoesNotExist: function(object) {
 		return {
-			'code': '5002',
+			'code': 5002,
 			'error': object + ' does not exist!'
 		};
 	},
 	/* Warns thet the user's credentials requested are invalid */
 	errorInvalidCredentials: function() {
 		return {
-			'code': '5003',
+			'code': 5003,
 			'error': 'Invalid username or password!'
 		};
 	},
@@ -34,15 +34,27 @@ module.exports = {
 	/* In case the user didn't specified any token */
 	errorTokenNotProvided: function() {
 		return {
-			'code': '5004',
+			'code': 5004,
 			'error': 'You must provide a token to make this request!'
 		}
 	},
 	/* Called when the user token is invalid */
 	errorInvalidToken: function() {
 		return {
-			'code': '5005',
+			'code': 5005,
 			'error': 'Your token is invalid!'
+		}
+	},
+	errorDatabase: function(code, err) {
+		var message = 'Error on database' ;
+
+		if('errors' in err && 'message' in err.errors[Object.keys(err.errors)[0]]) {
+			message = err.errors[Object.keys(err.errors)[0]].message;	
+		}
+
+		return {
+			'code': 5006,
+			'error': message
 		}
 	}
 }

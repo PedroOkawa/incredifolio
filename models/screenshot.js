@@ -7,8 +7,10 @@ var Screenshot = new Schema({
 	    type: Schema.Types.ObjectId,
 	    ref: 'screenshot',
   	},
-	description: String,
-	image: String,
+	image: {
+		type: String,
+		required: true
+	},
 	portfolio: {
 		type: Schema.Types.ObjectId,
 		ref: 'Portfolio',

@@ -3,7 +3,7 @@ var credentials = require('./.config/credentials');
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
-var favicon = require('serve-favicon')
+var favicon = require('serve-favicon');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var morgan = require('morgan');
@@ -17,6 +17,13 @@ var user = require('./routes/user');
 /* SETUP (APP) */
 var app = express();
 
+/* BODY PARSER */
+var options = {
+	inflate: true,
+	limit: '100kb',
+	type: 'application/octet-stream'
+};
+
 /* INITIALIZES MONGOOSE (MONGODB) */
 mongoose.Promise = global.Promise;
 mongoose.connect(credentials.mongoConnection);
@@ -27,6 +34,7 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(require('mongodb-js-errors/express'));
 
 app.use('/', index);
 app.use('/portfolio', portfolio);

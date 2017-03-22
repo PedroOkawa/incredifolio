@@ -1,8 +1,8 @@
 .settings/
 .classpath
 .project
-.config/
 
+config/
 bower_components/
 components/
 dist/

@@ -22,7 +22,7 @@ module.exports = {
 			.exec(
 				function(err, response) {
 					if(err) {
-						return callback(500, err);
+						return callback(500, errorResponses.errorDatabase(err));
 					}
 
 					for(var i = 0; i < response.length; i++) {
@@ -42,7 +42,7 @@ module.exports = {
 			.exec(
 				function(err, response) {
 					if(err) {
-						return callback(500, err);
+						return callback(500, errorResponses.errorDatabase(err));
 					}
 
 					if(!response) {
@@ -71,7 +71,7 @@ module.exports = {
 					.findOne({ _id:screenshotId})
 					.exec(function(err, response) {
 						if(err) {
-							return callback(500, err);
+							return callback(500, errorResponses.errorDatabase(err));
 						}
 
 						if(!response) {
@@ -87,15 +87,11 @@ module.exports = {
 	
 	/* INSERT */
 	
-	insertPortfolio: function(name, description, callback) {
-		var portfolioObject = new Portfolio();
-		portfolioObject.name = name;
-		portfolioObject.description = description;
-
-		portfolioObject.save(
+	insertPortfolio: function(portfolio, callback) {
+		portfolio.save(
 			function(err, response) {
 				if(err) {
-					return callback(500, err);
+					return callback(500, errorResponses.errorDatabase(err));
 				}
 
 				response = response.replaceId();
@@ -106,7 +102,7 @@ module.exports = {
 	},
 
 
-	insertScreenshot: function(portfolioId, file, description, callback) {
+	insertScreenshot: function(portfolioId, file, callback) {
 		module.exports.findPortfolio(portfolioId,
 			function(status, response) {
 				if(status != 200) {
@@ -143,12 +139,11 @@ module.exports = {
 								}
 
 								var screenshotObject = new Screenshot({portfolio: portfolioId});
-								screenshotObject.description = description;
 								screenshotObject.image = path.resolve(fileFolderDest + '/' + file.filename);
 								screenshotObject.save(
 									function(err, screenshot) {
 										if(err) {
-											return callback(500, err);
+											return callback(500, errorResponses.errorDatabase(err));
 										}
 
 										screenshot = screenshot.replaceId();

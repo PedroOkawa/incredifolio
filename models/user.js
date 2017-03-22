@@ -6,9 +6,17 @@ var User = new Schema({
 	    type: Schema.Types.ObjectId,
 	    ref: 'user',
   	},
-	name: String,
-	password: String,
-	description: String
+	name: {
+		type: String,
+		required: true
+	},
+	password: {
+		type: String,
+		required: true
+	},
+	description: {
+		type: String
+	}
 }, {
 	versionKey: false
 });

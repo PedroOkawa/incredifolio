@@ -6,7 +6,7 @@
 
 var app = require('../app');
 var credentials = require('../.config/credentials');
-var debug = require('debug')('incredifolio:server');
+var debug = require('debug')('portfolio:server');
 var fs = require('fs');
 var http = require('http');
 var https = require('https');
@@ -67,8 +67,6 @@ function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
   }
-
-  console.log('TEST');
 
   var bind = typeof port === 'string'
     ? 'Pipe ' + port

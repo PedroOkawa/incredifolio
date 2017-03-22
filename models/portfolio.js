@@ -6,8 +6,22 @@ var Portfolio = new Schema({
 	    type: Schema.Types.ObjectId,
 	    ref: 'portfolio',
   	},
-	name: String,
-	description: String,
+	portfolioName: {
+		type: String,
+		required: true
+	},
+	portfolioLogo: {
+		type: String
+	},
+	clientName: {
+		type: String
+	},
+	clientLogo: {
+		type: String
+	},
+	description: {
+		type: String
+	},
 	createdAt: {
 		type : Date,
 		default: Date.now

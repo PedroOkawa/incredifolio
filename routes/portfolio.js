@@ -14,7 +14,11 @@ router.use(function(req, res, next) {
 
 /* POST a portfolio. */
 router.post('/', function(req, res, next) {
-	database.insertPortfolio(req.body.name, 'Description',
+	var portfolio = new Portfolio(req.body);
+
+	console.log(portfolio);
+
+	database.insertPortfolio(portfolio,
 		function(status, response) {
 			res.status(status);
 			res.json(response);
@@ -25,11 +29,9 @@ router.post('/', function(req, res, next) {
 /* POST a screenshot into a specific portfolio. */
 router.post('/:portfolioId/screenshots', dependencies.upload.single('file'), function(req, res, next) {
 	var portfolioId = BSON.ObjectID.createFromHexString(req.params.portfolioId);
-	var description = req.body.description;
 	var file = req.file;
 
-
-	database.insertScreenshot(portfolioId, file, description,
+	database.insertScreenshot(portfolioId, file,
 		function(status, response) {
 			res.status(status);
 			res.json(response);
@@ -86,5 +88,11 @@ router.delete('/:portfolioId/screenshots/:screenshotId', function(req, res) {
 		}
 	);
 });
+
+function validatePortfolio(portfolioReq) {
+	if(!portfolioReq.portfolioName) {
+		return null;
+	}
+}
 
 module.exports = router;
