@@ -6,13 +6,20 @@ var User = new Schema({
 	    type: Schema.Types.ObjectId,
 	    ref: 'user',
   	},
-	name: {
+  	username: {
 		type: String,
-		required: true
-	},
+		required: true,
+		unique: true
+  	},
 	password: {
 		type: String,
 		required: true
+	},
+	firstName: {
+		type: String
+	},
+	lastName: {
+		type: String
 	},
 	description: {
 		type: String

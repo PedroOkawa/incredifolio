@@ -1,5 +1,20 @@
 /* Stores all error responses */
 module.exports = {
+	/* USER */
+	/* Register */
+	successRegister: function(user, token) {
+		return {
+			'message': 'User ' + user.username + ' created!',
+			'token': token
+		}
+	},
+	/* Authenticate */
+	successAuthentication: function(user, token) {
+		return {
+			'message': 'User ' + user.username + ' authenticated!',
+			'token': token
+		}
+	},
 	/* GENERAL */
 	/* Warns the user about an empty field */
 	errorEmptyField: function(field) {
@@ -10,10 +25,10 @@ module.exports = {
 	},
 	/* USER */
 	/* Warns thet the requested user to be creater already exists */
-	errorUserAlreadyExist: function() {
+	errorAlreadyExist: function(object) {
 		return {
 			'code': 5001,
-			'error': 'User already exist!'
+			'error': object + ' already exist!'
 		};
 	},
 	/* Warns thet the requested user does not exists */
@@ -45,7 +60,7 @@ module.exports = {
 			'error': 'Your token is invalid!'
 		}
 	},
-	errorDatabase: function(code, err) {
+	errorDatabase: function(err) {
 		var message = 'Error on database' ;
 
 		if('errors' in err && 'message' in err.errors[Object.keys(err.errors)[0]]) {
