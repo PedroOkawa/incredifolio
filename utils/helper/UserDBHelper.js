@@ -18,6 +18,10 @@ module.exports = {
 					return callback(500, responseManager.errorDatabase(err));
 				}
 
+				if(!response) {
+					return callback(404, responseManager.errorDoesNotExist('User'));
+				}
+
 				response = response.replaceId();
 				return callback(200, response);
 			}
