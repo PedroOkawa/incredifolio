@@ -13,13 +13,13 @@ module.exports = {
 	/* FIND */
 	find: function(username, password, callback) {
 		User.findOne({ username: username, password: password },
-			function(err, user) {
+			function(err, response) {
 				if(err) {
-					console.log('test 1');
 					return callback(500, responseManager.errorDatabase(err));
 				}
 
-				return callback(200, user);
+				response = response.replaceId();
+				return callback(200, response);
 			}
 		);
 	},
@@ -80,6 +80,5 @@ module.exports = {
 			}
 		);
 	}
-
 
 } 

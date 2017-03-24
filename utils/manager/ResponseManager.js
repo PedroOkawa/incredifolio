@@ -4,14 +4,14 @@ module.exports = {
 	/* Register */
 	successRegister: function(user, token) {
 		return {
-			'message': 'User ' + user.username + ' created!',
+			'data': user,
 			'token': token
 		}
 	},
 	/* Authenticate */
 	successAuthentication: function(user, token) {
 		return {
-			'message': 'User ' + user.username + ' authenticated!',
+			'data': user,
 			'token': token
 		}
 	},
