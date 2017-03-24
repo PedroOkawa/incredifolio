@@ -1,17 +1,10 @@
 /* Stores all error responses */
 module.exports = {
 	/* USER */
-	/* Register */
-	successRegister: function(user, token) {
+	/* Authenticate or Register */
+	successUserResponse: function(user, token) {
 		return {
-			'data': user,
-			'token': token
-		}
-	},
-	/* Authenticate */
-	successAuthentication: function(user, token) {
-		return {
-			'data': user,
+			'user': user,
 			'token': token
 		}
 	},
@@ -20,7 +13,7 @@ module.exports = {
 	errorEmptyField: function(field) {
 		return {
 			'code': 5000,
-			'error': 'You must provide ' + field
+			'message': 'You must provide ' + field
 		}
 	},
 	/* USER */
@@ -28,21 +21,21 @@ module.exports = {
 	errorAlreadyExist: function(object) {
 		return {
 			'code': 5001,
-			'error': object + ' already exist!'
+			'message': object + ' already exist!'
 		};
 	},
 	/* Warns thet the requested user does not exists */
 	errorDoesNotExist: function(object) {
 		return {
 			'code': 5002,
-			'error': object + ' does not exist!'
+			'message': object + ' does not exist!'
 		};
 	},
 	/* Warns thet the user's credentials requested are invalid */
 	errorInvalidCredentials: function() {
 		return {
 			'code': 5003,
-			'error': 'Invalid username or password!'
+			'message': 'Invalid username or password!'
 		};
 	},
 	/* MIDDLEWARE (TOKEN) */
@@ -50,14 +43,14 @@ module.exports = {
 	errorTokenNotProvided: function() {
 		return {
 			'code': 5004,
-			'error': 'You must provide a token to make this request!'
+			'message': 'You must provide a token to make this request!'
 		}
 	},
 	/* Called when the user token is invalid */
 	errorInvalidToken: function() {
 		return {
 			'code': 5005,
-			'error': 'Your token is invalid!'
+			'message': 'Your token is invalid!'
 		}
 	},
 	errorDatabase: function(err) {
@@ -69,7 +62,7 @@ module.exports = {
 
 		return {
 			'code': 5006,
-			'error': message
+			'message': message
 		}
 	}
 }

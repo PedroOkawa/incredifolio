@@ -19,7 +19,7 @@ module.exports = {
 			function(status, response) {
 				if(status == 200) {
 					var token = jwt.sign(response, credentials.jwtSecret);
-					response = responseManager.successRegister(response, token);
+					response = responseManager.successUserResponse(response, token);
 				}
 
 				res.status(status);
@@ -48,7 +48,7 @@ module.exports = {
 
 				if(status == 200) {
 					var token = jwt.sign(response, credentials.jwtSecret);
-					response = responseManager.successAuthentication(response, token);
+					response = responseManager.successUserResponse(response, token);
 				}
 
 				res.status(status);
