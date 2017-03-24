@@ -24,7 +24,8 @@ app.set('port', port);
  */
 const options = {
   key: fs.readFileSync(credentials.keypath),
-  cert: fs.readFileSync(credentials.certpath)
+  cert: fs.readFileSync(credentials.certpath),
+  ca: fs.readFileSync(credentials.chainpath)
 }
 var server = https.createServer(options, app);
 //var server = http.createServer(app);
