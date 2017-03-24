@@ -6,9 +6,9 @@ var router = express.Router();
 router.use(middlewareHelper);
 
 /* POST a screenshot into a specific portfolio. */
-router.post('/validate',
+router.get('/validate',
 	function(req, res, next) {
-		res.status(204).send();
+		res.status(204).json({});
 	}
 );
 
