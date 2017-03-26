@@ -8,7 +8,8 @@ router.use(middlewareHelper);
 /* POST a screenshot into a specific portfolio. */
 router.get('/validate',
 	function(req, res, next) {
-		res.status(204).json({});
+		res.status(204);
+		res.send();
 	}
 );
 
