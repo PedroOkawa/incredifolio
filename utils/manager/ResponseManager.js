@@ -53,15 +53,28 @@ module.exports = {
 			'message': 'Your token is invalid!'
 		}
 	},
+	/* Called when the user token is invalid */
+	errorCredentialsMismatch: function() {
+		return {
+			'code': 5006,
+			'message': 'Authentication failed due to a credentials mismatch!'
+		}
+	},
 	errorDatabase: function(err) {
-		var message = 'Error on database' ;
+		var message = 'Error on database';
+
+		console.log(err);
+
+		if('message' in err) {
+			message = err.message;
+		}
 
 		if('errors' in err && 'message' in err.errors[Object.keys(err.errors)[0]]) {
 			message = err.errors[Object.keys(err.errors)[0]].message;	
 		}
 
 		return {
-			'code': 5006,
+			'code': 5007,
 			'message': message
 		}
 	}

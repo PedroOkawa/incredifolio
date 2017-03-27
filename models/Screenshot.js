@@ -24,7 +24,7 @@ Screenshot.plugin(relationship, {
 	relationshipPathName: 'portfolio'
 });
 
-Screenshot.method('replaceId', function() {
+Screenshot.method('generateOutput', function() {
     var obj = this.toObject();
 
     obj.id = obj._id;

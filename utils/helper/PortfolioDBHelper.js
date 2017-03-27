@@ -25,7 +25,7 @@ module.exports = {
 					}
 
 					for(var i = 0; i < response.length; i++) {
-						response[i] = response[i].replaceId();
+						response[i] = response[i].generateOutput();
 						delete response[i].screenshots;
 					}
 
@@ -48,10 +48,10 @@ module.exports = {
 						return callback(404, responseManager.errorDoesNotExist('Portfolio'));
 					}
 
-					response = response.replaceId();
+					response = response.generateOutput();
 					for(var i = 0; i < response.screenshots.length; i++) {
 						var screenshot = new Screenshot(response.screenshots[i]);
-						response.screenshots[i] = screenshot.replaceId();
+						response.screenshots[i] = screenshot.generateOutput();
 					}
 
 					return callback(200, response);
@@ -67,7 +67,7 @@ module.exports = {
 					return callback(500, responseManager.errorDatabase(err));
 				}
 
-				response = response.replaceId();
+				response = response.generateOutput();
 
 				return callback(201, response);
 			}

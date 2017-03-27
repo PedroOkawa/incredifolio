@@ -37,7 +37,7 @@ var Portfolio = new Schema({
 	versionKey: false
 });
 
-Portfolio.method('replaceId', function() {
+Portfolio.method('generateOutput', function() {
     var obj = this.toObject();
 
     obj.id = obj._id;

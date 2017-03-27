@@ -8,11 +8,14 @@ var portfolioDBHelper = require('../../utils/helper/PortfolioDBHelper');
 var responseManager = require('../../utils/manager/ResponseManager');
 var User = require('../../models/User');
 
+var bcrypt = require('bcrypt');
+var security = require('../../config/Security');
+
 module.exports = {
 	
 	/* FIND */
 	find: function(username, password, callback) {
-		User.findOne({ username: username, password: password },
+		User.findOne({ username: username },
 			function(err, response) {
 				if(err) {
 					return callback(500, responseManager.errorDatabase(err));
@@ -22,7 +25,12 @@ module.exports = {
 					return callback(404, responseManager.errorDoesNotExist('User'));
 				}
 
-				response = response.replaceId();
+				var salt = String(bcrypt.genSaltSync(security.saltFactor));
+				if(!bcrypt.compareSync(password, response.password)) {
+					return callback(403, responseManager.errorCredentialsMismatch());
+				}
+
+				response = response.generateOutput();
 				return callback(200, response);
 			}
 		);
@@ -32,12 +40,14 @@ module.exports = {
 	insert: function(username, password, callback) {
 		module.exports.find(username, password,
 			function(status, response) {
-				if(status != 200) {
-					return callback(status, response);
-				}
+				if(status != 404) {
+					if(status != 200) {
+						return callback(status, response);
+					}
 
-				if(response) {
-					return callback(409, responseManager.errorAlreadyExist('User'));
+					if(response) {
+						return callback(409, responseManager.errorAlreadyExist('User'));
+					}
 				}
 
 				user = new User();
@@ -45,13 +55,14 @@ module.exports = {
 				user.password = password;
 
 				user.save(
-					function(err) {
+					function(err, response) {
 						if(err) {
-							console.log('test 2');
 							return callback(500, responseManager.errorDatabase(err));
 						}
 
-						return callback(200, user);
+						response = response.generateOutput();
+
+						return callback(200, response);
 					}
 				);
 			}

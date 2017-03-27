@@ -81,7 +81,7 @@ module.exports = {
 											return callback(500, responseManager.errorDatabase(err));
 										}
 
-										screenshot = screenshot.replaceId();
+										screenshot = screenshot.generateOutput();
 										return callback(201, screenshot);
 									}
 								);
