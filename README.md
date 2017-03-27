@@ -1,4 +1,4 @@
-# portfolio API [![Build Status](https://travis-ci.org/PedroOkawa/repo-start.svg?branch=master)](https://travis-ci.org/PedroOkawa/repo-start)
+# Portfolio API [![Build Status](https://travis-ci.org/PedroOkawa/repo-start.svg?branch=master)](https://travis-ci.org/PedroOkawa/repo-start)
 
 This is an experiment (Because It's my first time implementing API's, I've never programmed with JavaScript, NodeJS and MongoDB).
 
