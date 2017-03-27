@@ -41,7 +41,7 @@ module.exports = {
 		module.exports.find(username, password,
 			function(status, response) {
 				if(status != 404) {
-					if(status != 200) {
+					if(status != 200 && status != 403) {
 						return callback(status, response);
 					}
 
