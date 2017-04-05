@@ -1,14 +1,14 @@
 var BSON = require('bson');
-var portfolioDBHelper = require('../../utils/helper/PortfolioDBHelper');
-var Portfolio = require('../../models/Portfolio');
+var clientDBHelper = require('../../utils/helper/ClientDBHelper');
+var Client = require('../../models/Client');
 
 module.exports = {
 
-	/* Create a portfolio based on raw body. */
+	/* Create a client based on raw body. */
 	create: function(req, res, next) {
-		var portfolio = new Portfolio(req.body);
+		var client = new Client(req.body);
 
-		portfolioDBHelper.insert(portfolio,
+		clientDBHelper.insert(client,
 			function(status, response) {
 				res.status(status);
 				res.json(response);
@@ -16,12 +16,12 @@ module.exports = {
 		);
 	},
 
-	/* List all portfolios from a specific group (Minify). */
+	/* List all clients */
 	list: function(req, res, next) {
 		var perPage = !req.query.perPage ? 10 : Number(req.query.perPage);
 		var startDate = !req.query.startDate ? Date.now : new Date(req.query.startDate * 1000);
 
-		portfolioDBHelper.list(startDate, perPage,
+		clientDBHelper.list(startDate, perPage,
 			function(status, response) {
 				res.status(status);
 				res.json(response);
@@ -29,11 +29,11 @@ module.exports = {
 		);
 	},
 
-	/* Show portfolio details */
+	/* Show client details */
 	details: function(req, res) {
-		var portfolioId = BSON.ObjectID.createFromHexString(req.params.portfolioId);
+		var clientId = BSON.ObjectID.createFromHexString(req.params.clientId);
 
-		portfolioDBHelper.find(portfolioId,
+		clientDBHelper.find(clientId,
 			function(status, response) {
 				res.status(status);
 				res.json(response);
@@ -41,11 +41,11 @@ module.exports = {
 		);
 	},
 
-	/* Delete the specified portfolio */
+	/* Delete the specified client */
 	delete: function(req, res) {
-		var portfolioId = BSON.ObjectID.createFromHexString(req.params.portfolioId);
+		var clientId = BSON.ObjectID.createFromHexString(req.params.clientId);
 
-		portfolioDBHelper.remove(portfolioId,
+		clientDBHelper.remove(clientId,
 			function(status, response) {
 				res.status(status);
 				res.json(response);

@@ -3,9 +3,8 @@ const path = require('path');
 
 var dependenciesManager = require('../../utils/manager/DependenciesManager');
 var mkdirp = require('mkdirp');
-var Portfolio = require('../../models/Portfolio');
+var Client = require('../../models/Client');
 var responseManager = require('../../utils/manager/ResponseManager');
-var Screenshot = require('../../models/Screenshot');
 
 module.exports = {
 
@@ -13,11 +12,11 @@ module.exports = {
 	list: function(startDate, perPage, callback) {
 		var query = !startDate ? {} : { createdAt: { $lt: startDate } };
 
-		Portfolio
+		Client
 			.find(query)
 			.limit(perPage)
 			.sort('-createdAt')
-			.populate('screenshots')
+			.populate('portfolios')
 			.exec(
 				function(err, response) {
 					if(err) {
@@ -26,8 +25,7 @@ module.exports = {
 
 					for(var i = 0; i < response.length; i++) {
 						response[i] = response[i].generateOutput();
-						delete response[i].screenshots;
-						delete response[i].client;
+						delete response[i].portfolios;
 					}
 
 					return callback(200, response);
@@ -35,10 +33,10 @@ module.exports = {
 			);
 	},
 
-	find: function(portfolioId, callback) {
-		Portfolio
-			.findOne({_id:portfolioId})
-			.populate('screenshots')
+	find: function(clientId, callback) {
+		Client
+			.findOne({_id:clientId})
+			.populate('portfolios')
 			.exec(
 				function(err, response) {
 					if(err) {
@@ -46,16 +44,14 @@ module.exports = {
 					}
 
 					if(!response) {
-						return callback(404, responseManager.errorDoesNotExist('Portfolio'));
+						return callback(404, responseManager.errorDoesNotExist('Client'));
 					}
 
 					response = response.generateOutput();
-					for(var i = 0; i < response.screenshots.length; i++) {
-						var screenshot = new Screenshot(response.screenshots[i]);
-						response.screenshots[i] = screenshot.generateOutput();
+					for(var i = 0; i < response.portfolios.length; i++) {
+						var portfolio = new Portfolio(response.portfolios[i]);
+						response.portfolios[i] = portfolio.generateOutput();
 					}
-					
-					response.client = response.client.generateOutput();
 
 					return callback(200, response);
 				}
@@ -63,8 +59,8 @@ module.exports = {
 	},
 	
 	/* INSERT */
-	insert: function(portfolio, callback) {
-		portfolio.save(
+	insert: function(client, callback) {
+		client.save(
 			function(err, response) {
 				if(err) {
 					return callback(500, responseManager.errorDatabase(err));
@@ -78,40 +74,21 @@ module.exports = {
 	},
 
 	/* REMOVE */
-	remove: function(portfolioId, callback) {
-		module.exports.find(portfolioId,
+	remove: function(clientId, callback) {
+		module.exports.find(clientId,
 			function(status, response) {
 				if(status != 200) {
 					return callback(status, response);
 				}
 
-				Portfolio
-					.remove({ _id:portfolioId })
+				Client
+					.remove({ _id:clientId })
 					.exec(function(err) {
 						if(err) {
 							return callback(500, responseManager.errorDatabase(err));
 						}
 
-						Screenshot
-							.remove({ portfolio:portfolioId })
-							.exec(function(err) {
-								if(err) {
-									return callback(500, responseManager.errorDatabase(err));
-								}
-
-								var fileFolderDest = path.resolve('./' + dependenciesManager.output + '/' + portfolioId);
-
-								fs.removeSync(fileFolderDest,
-									function(err) {
-										if(err) {
-											return callback(500, err);
-										}
-									}
-								);
-
-								return callback(200, { id:portfolioId });
-							}
-						);
+						return callback(200, { id:clientId });
 					}
 				);
 			}

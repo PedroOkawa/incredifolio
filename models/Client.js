@@ -1,22 +1,16 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var Portfolio = new Schema({
+var Client = new Schema({
 	id: {
 	    type: Schema.Types.ObjectId,
-	    ref: 'portfolio',
+	    ref: 'client',
   	},
 	name: {
 		type: String,
 		required: true
 	},
 	image: {
-		type: String
-	},
-	clientName: {
-		type: String
-	},
-	clientLogo: {
 		type: String
 	},
 	description: {
@@ -26,23 +20,18 @@ var Portfolio = new Schema({
 		type : Date,
 		default: Date.now
 	},
-	portfolio: {
-		type: Schema.Types.ObjectId,
-		ref: 'Client',
-		childPath: 'portfolio'
-	},
-	screenshots:[
+	portfolios: [
 		{
 			type: Schema.Types.ObjectId,
-			ref: 'Screenshot',
-        	_id: false
+			ref: 'Portfolio',
+	        _id: false
 		}
 	]
 }, {
 	versionKey: false
 });
 
-Portfolio.method('generateOutput', function() {
+Client.method('generateOutput', function() {
     var obj = this.toObject();
 
     obj.id = obj._id;
@@ -51,4 +40,4 @@ Portfolio.method('generateOutput', function() {
     return obj;
 });
 
-module.exports = mongoose.model('Portfolio', Portfolio);
+module.exports = mongoose.model('Client', Client);
