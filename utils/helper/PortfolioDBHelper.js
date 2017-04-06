@@ -55,7 +55,9 @@ module.exports = {
 						response.screenshots[i] = screenshot.generateOutput();
 					}
 					
-					response.client = response.client.generateOutput();
+					if(response.client) {
+						response.client = response.client.generateOutput();
+					}
 
 					return callback(200, response);
 				}
