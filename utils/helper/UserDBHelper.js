@@ -15,7 +15,7 @@ module.exports = {
 	
 	/* FIND */
 	find: function(username, password, callback) {
-		User.findOne({ username: username },
+		User.findOne({ username: '/^' + username + '$/i' },
 			function(err, response) {
 				if(err) {
 					return callback(500, responseManager.errorDatabase(err));
@@ -82,7 +82,7 @@ module.exports = {
 				}
 
 				User
-					.remove({ username: username, password: password })
+					.remove({ username: '/^' + username + '$/i', password: password })
 					.exec(
 						function(err) {
 							if(err) {
