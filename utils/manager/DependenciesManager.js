@@ -5,6 +5,7 @@ var output = 'public' + imagesFolder;
 
 module.exports = {
     /* MULTER UPLOAD MODULE */
+    imagesFolder : imagesFolder,
     output: output,
     upload: multer({ storage: multer.diskStorage({
             destination: function (req, file, cb) {
