@@ -84,7 +84,7 @@ module.exports = {
 				User
 					.remove(
 						{
-							username:  new RegExp(username, 'i'),
+							username: new RegExp(username, 'i'),
 							password: password
 						}
 					)
