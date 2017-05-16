@@ -1,6 +1,7 @@
 const path = require('path');
 const multer = require('multer');
-var output = 'public/images/';
+var imagesFolder = '/images';
+var output = 'public' + imagesFolder;
 
 module.exports = {
     /* MULTER UPLOAD MODULE */

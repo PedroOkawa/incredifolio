@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 
+var credentials = require('../../config/Credentials');
 var dependenciesManager = require('../../utils/manager/DependenciesManager');
 var mkdirp = require('mkdirp');
 var Portfolio = require('../../models/Portfolio');
@@ -74,7 +75,7 @@ module.exports = {
 								}
 
 								var screenshotObject = new Screenshot({portfolio: portfolioId});
-								screenshotObject.image = path.resolve(fileFolderDest + '/' + file.filename);
+								screenshotObject.image = credentials.host + dependenciesManager.imagesFolder + '/' + portfolioId + '/' + file.filename;
 								screenshotObject.save(
 									function(err, screenshot) {
 										if(err) {
