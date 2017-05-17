@@ -31,7 +31,7 @@ module.exports = {
 
     		return cb(new Error('Only JPG\'s and PNG\' are allowed'));
     	},
-        limits: { fileSize: 1028 * 100 }
+        limits: { fileSize: 1028 * 1000 }
     }),
 
 }
