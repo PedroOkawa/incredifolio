@@ -2,10 +2,14 @@ const path = require('path');
 const multer = require('multer');
 var imagesFolder = '/images';
 var output = 'public' + imagesFolder;
+var mainImageFolder = '/main';
+var screenshotsFolder = '/screenshots';
 
 module.exports = {
     /* MULTER UPLOAD MODULE */
-    imagesFolder : imagesFolder,
+    mainImageFolder: mainImageFolder,
+    screenshotsFolder: screenshotsFolder,
+    imagesFolder: imagesFolder,
     output: output,
     upload: multer({ storage: multer.diskStorage({
             destination: function (req, file, cb) {

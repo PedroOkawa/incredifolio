@@ -18,4 +18,7 @@ router.get('/:portfolioId', portfolioController.details);
 /* DELETE portfolio */
 router.delete('/:portfolioId', portfolioController.delete);
 
+/* PATCH portfolio */
+router.patch('/:portfolioId', portfolioController.update);
+
 module.exports = router;

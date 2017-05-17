@@ -51,6 +51,19 @@ module.exports = {
 				res.json(response);
 			}
 		);
+	},
+
+	/* Update the specified portfolio */
+	update: function(req, res) {
+		var portfolioId = BSON.ObjectID.createFromHexString(req.params.portfolioId);
+		var portfolio = new Portfolio(req.body);
+
+		portfolioDBHelper.update(portfolioId, portfolio,
+			function(status, response) {
+				res.status(status);
+				res.json(response);
+			}
+		);
 	}
 
 }

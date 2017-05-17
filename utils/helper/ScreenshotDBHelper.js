@@ -41,8 +41,11 @@ module.exports = {
 	insert: function(portfolioId, file, callback) {
 		portfolioDBHelper.find(portfolioId,
 			function(status, response) {
+				var fileFolderSource = path.resolve('./' + dependenciesManager.output);
+				var fileFolderDest = path.resolve('./' + dependenciesManager.output + '/' + portfolioId + dependenciesManager.screenshotsFolder);
+
 				if(status != 200) {
-					fs.removeSync(dependenciesManager.output + file.filename, function(err) {
+					fs.removeSync(fileFolderDest + file.filename, function(err) {
 						if(err) {
 							return callback(500, err);
 						}
@@ -50,9 +53,6 @@ module.exports = {
 
 					return callback(status, response);
 				}
-
-				var fileFolderSource = path.resolve('./' + dependenciesManager.output);
-				var fileFolderDest = path.resolve('./' + dependenciesManager.output + '/' + portfolioId);
 
 				mkdirp(fileFolderDest,
 					function(err) {
@@ -75,7 +75,7 @@ module.exports = {
 								}
 
 								var screenshotObject = new Screenshot({portfolio: portfolioId});
-								screenshotObject.image = credentials.host + dependenciesManager.imagesFolder + '/' + portfolioId + '/' + file.filename;
+								screenshotObject.image = credentials.host + dependenciesManager.imagesFolder + '/' + portfolioId + dependenciesManager.screenshotsFolder + '/' + file.filename;
 								screenshotObject.save(
 									function(err, screenshot) {
 										if(err) {
@@ -121,11 +121,20 @@ module.exports = {
 										return callback(500, err);
 									}
 
-									fs.removeSync(screenshot.image, function(err) {
-										if(err) {
-											return callback(500, err);
+									var startIndex = screenshot.image.lastIndexOf('/');
+									var endIndex = screenshot.image.length;
+									var fileName = screenshot.image.substring(startIndex, endIndex);
+
+									var filePath = path.resolve('./' + dependenciesManager.output + '/' + portfolioId + dependenciesManager.screenshotsFolder + fileName);
+
+									console.log(filePath);
+
+									fs.removeSync(filePath, function(err) {
+											if(err) {
+												return callback(500, err);
+											}
 										}
-									});
+									);
 
 									return callback(200, { id:screenshotId });
 								}

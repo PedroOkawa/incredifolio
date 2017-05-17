@@ -118,6 +118,36 @@ module.exports = {
 				);
 			}
 		);
+	},
+
+	/* UPDATE */
+	update: function(portfolioId, portfolio, callback) {
+		var patch = JSON.parse(JSON.stringify(portfolio));
+
+		delete patch._id;
+		delete patch.id;
+		delete patch.createdAt;
+		delete patch.portfolio;
+		delete patch.screenshots;
+
+		Portfolio
+			.update({ _id:portfolioId }, { $set: patch })
+			.exec(function(err) {
+					if(err) {
+						return callback(500, responseManager.errorDatabase(err));
+					}
+
+					module.exports.find(portfolioId,
+						function(status, response) {
+							if(status != 200) {
+								return callback(status, response);
+							}
+
+							return callback(200, response);
+						}
+					);
+				}
+			);
 	}
 
 } 
