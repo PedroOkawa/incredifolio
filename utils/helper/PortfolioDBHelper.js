@@ -16,7 +16,7 @@ module.exports = {
 		Portfolio
 			.find(query)
 			.limit(perPage)
-			.sort(['createdAt', 'descending'])
+			.sort([['createdAt', 'descending']])
 			.populate('screenshots')
 			.exec(
 				function(err, response) {
