@@ -19,7 +19,7 @@ module.exports = {
 	/* List all portfolios from a specific group (Minify). */
 	list: function(req, res, next) {
 		var perPage = !req.query.perPage ? 10 : Number(req.query.perPage);
-		var startDate = !req.query.startDate ? Date.now : new Date(req.query.startDate * 1000);
+		var startDate = !req.query.startDate ? Date.now : new Date(parseInt(req.query.startDate));
 
 		portfolioDBHelper.list(startDate, perPage,
 			function(status, response) {

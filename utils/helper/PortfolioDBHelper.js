@@ -11,7 +11,7 @@ module.exports = {
 
 	/* FIND */
 	list: function(startDate, perPage, callback) {
-		var query = !startDate ? {} : { createdAt: { $lt: new Date(startDate) } };
+		var query = !startDate ? {} : { createdAt: { $lt: startDate } };
 
 		Portfolio
 			.find(query)
