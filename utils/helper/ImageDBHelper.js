@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
+const rimraf = require('rimraf');
 
 var credentials = require('../../config/Credentials');
 var dependenciesManager = require('../../utils/manager/DependenciesManager');
@@ -27,8 +28,8 @@ module.exports = {
 					return callback(status, response);
 				}
 
-				fs.removeSync(fileFolderDest,
-					function(err) {
+				rimraf(fileFolderDest,
+					function (err) {
 						if(err) {
 							return callback(500, err);
 						}
